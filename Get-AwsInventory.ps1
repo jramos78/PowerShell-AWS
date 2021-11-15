@@ -3,14 +3,19 @@
   Generates an AWS resource inventory on an Excel spreadsheet.
   
 .DESCRIPTION
+ This script generates an inventory of the AWS services/resources listed below and writes it to an Excel spreadsheet. 
+ -S3 buckets
+ -RDS instances
+ -IAM users
+ -Elastic Load Balancers (ELB)
+ -Workspaces
+ -Directory Services
+ -VPC
+ -VPC subnets
+ -EC2 instances
   
-  This script requires the following:
-  -The AWS PowerShell module (this can be installed directly from PowerShell by running the following command: Install-Module -Name AWSPowerShell -Force)
-  -IAM credentials that have permissions to query AWS services.
-  -Setup the AWS PowerShell module as described on https://docs.aws.amazon.com/powershell/latest/userguide/specifying-your-aws-credentials.html
-  
-.PARAMETER
-  None
+.PARAMETER Region
+  This patameter is optional and determines which AWS region will be queried. If not entered, the user will be prompted to select an AWS region from among those in the US. 
   
 .INPUTS
   None
@@ -23,11 +28,16 @@
   Updated on:  		Nov. 9, 2021
   Purpose/Change: 	Working version
   
+  This script requires the following:
+  -The AWS PowerShell module (this can be installed directly from PowerShell by running the following command: Install-Module -Name AWSPowerShell -Force)
+  -IAM credentials that have permissions to query AWS services.
+  -The desktop version of Excel.
+  -The AWS PowerShell module has been configured as described at https://docs.aws.amazon.com/powershell/latest/userguide/specifying-your-aws-credentials.html
+  
 .EXAMPLE
   Get-AwsInventory
   Get-AwsInventory -Region us-east-1
 #>
-##### Requires the AWS PowerShell module
 function Get-AwsInventory {
 	param (
 		#Allow the $Region parameter to be empty
@@ -36,7 +46,7 @@ function Get-AwsInventory {
 		[AllowEmptyCollection()]
 		[String]$Region
 	)
-	#Define a new Excel object as a global variable and create a new workbook
+	#Create a new Excel file
 	$excel = New-Object -ComObject Excel.Application
 	#create a new Excel workbook
 	$workbook = $excel.Workbooks.Add()
@@ -535,4 +545,3 @@ function Get-AwsInventory {
 		} else {Clear;Write-Warning "The script has exited because an AWS EC2 region was not selected."}
 	}
 }
-Get-AwsInventory
