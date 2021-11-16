@@ -38,7 +38,7 @@ function Get-AwsWebsiteData {
 		[AllowEmptyCollection()]
 		[String]$Region,
 		[parameter(Mandatory=$true)]
-        [string[]]$Domains
+        	[string[]]$Domains
 	)
 	#Ask the user to choose which US AWS region to query
 	function Select-EC2Region {
