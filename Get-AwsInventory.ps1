@@ -15,7 +15,7 @@
  -EC2 instances
   
 .PARAMETER Region
-  This patameter is optional and determines which AWS region will be queried. If not entered, the user will be prompted to select an AWS region from among those in the US. 
+  This parameter is optional and determines which AWS region will be queried. If not entered, the user will be prompted to select an AWS region from among those in the US. 
   
 .INPUTS
   None
@@ -25,8 +25,8 @@
   
 .NOTES
   Author:         	Jorge Ramos (https://github.com/jramos78/PowerShell)
-  Updated on:  		Nov. 9, 2021
-  Purpose/Change: 	Working version
+  Updated on:  		Nov. 16, 2021
+  Purpose/Change: 	Fixed syntax errors
   
   This script requires the following:
   -The AWS PowerShell module (this can be installed directly from PowerShell by running the following command: Install-Module -Name AWSPowerShell -Force)
