@@ -22,8 +22,8 @@
 
 .NOTES
   Author:         	Jorge Ramos (https://github.com/jramos78/PowerShell)
-  Updated on:  		Nov. 16, 2021
-  Purpose/Change: 	Working version
+  Updated on:  		Jan. 17, 2022
+  Purpose/Change: 	Updated logic to get the SSL policy on ELBs
 
 .EXAMPLE
 	Get-AwsWebsiteData
@@ -38,7 +38,7 @@ function Get-AwsWebsiteData {
 		[AllowEmptyCollection()]
 		[String]$Region,
 		[parameter(Mandatory=$true)]
-        	[string[]]$Domains
+        [string[]]$Domains
 	)
 	#Ask the user to choose which US AWS region to query
 	function Select-EC2Region {
@@ -126,9 +126,10 @@ function Get-AwsWebsiteData {
 							$instanceIp = ((Get-EC2Instance).Instances | Where InstanceId -eq $instanceIds).PrivateIpAddress
 							$instanceData = "$instanceName ($instanceIp)"
 						} else {$instanceName = "The instance was not found!"}
-						###$securityPolicy = (Get-ELB2Listener -LoadBalancerArn $elbArn).SslPolicy
 						$ports = (Get-ELB2TargetHealth $tgArn).Target.Port
-						$securityPolicy = (Get-ELB2Listener -LoadBalancerArn $elbArn).SslPolicy
+						$listeners = Get-ELB2Listener -LoadBalancerArn $elbArn
+						$sslPolicy = [string]$listeners.SslPolicy | Where SslPolicy -ne ""
+						if (!$sslPolicy){$sslPolicy = "N/A"}
 						#Write the data to the spreadsheet
 						$spreadsheet.Cells.Item($row,$column++) = $name
 						$spreadsheet.Cells.Item($row,$column++) = $elbName
@@ -136,7 +137,7 @@ function Get-AwsWebsiteData {
 						$spreadsheet.Cells.Item($row,$column++) = $elbScheme
 						$spreadsheet.Cells.Item($row,$column++) = $elbType
 						$spreadsheet.Cells.Item($row,$column++) = $tgName
-						$spreadsheet.Cells.Item($row,$column++) = $securityPolicy
+						$spreadsheet.Cells.Item($row,$column++) = $sslPolicy
 						$spreadsheet.Cells.Item($row,$column++) = $instanceData
 						$spreadsheet.Cells.Item($row,$column++) = $ports
 						#Start the next row at column 1
